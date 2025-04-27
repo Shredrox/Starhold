@@ -3,11 +3,17 @@ using UnityEngine.UI;
 
 public class EnemyHealthBar : MonoBehaviour
 {
-    public Slider slider;
     public Enemy enemy;
+    public Image healthFill;
 
     private void Update()
     {
-        slider.value = enemy != null ? enemy.currentHealth : 0;
+        if (enemy == null) return;
+
+        float fillAmount = enemy.currentHealth / enemy.maxHealth;
+        Debug.Log("Health Fill Amount: " + fillAmount);
+        healthFill.fillAmount = fillAmount;
+
+        transform.rotation = Camera.main.transform.rotation;
     }
 }

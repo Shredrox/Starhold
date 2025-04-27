@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
     public Transform[] pathPoints;
-    public float timeBetweenWaves = 5f;
+    public GameObject enemyPrefab;
+    public Transform enemySpawnPoint;
+    public float timeBetweenSpawns = 2f;
     public int enemiesPerWave = 5;
-
-    private int waveNumber = 0;
-    private bool isSpawning = false;
+    public int totalWaves = 3;
+    private int currentWave = 0;
 
     private void Start()
     {
@@ -19,21 +19,47 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnWaves()
     {
-        while (true)
+        while (currentWave < totalWaves)
         {
-            waveNumber++;
+            currentWave++;
+            Debug.Log("Wave " + currentWave);
             for (int i = 0; i < enemiesPerWave; i++)
             {
                 SpawnEnemy();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(timeBetweenSpawns);
             }
-            yield return new WaitForSeconds(timeBetweenWaves);
+            yield return new WaitForSeconds(5f);
         }
     }
 
     void SpawnEnemy()
     {
-        GameObject enemy = Instantiate(enemyPrefab, pathPoints[0].position, Quaternion.identity);
-        enemy.GetComponent<Enemy>().SetPath(pathPoints);
+        GameObject enemyObj = Instantiate(enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
+        Enemy enemy = enemyObj.GetComponent<Enemy>();
+
+        if (enemy != null)
+        {
+            enemy.pathPoints = pathPoints;
+        }
+        else
+        {
+            Debug.LogWarning("Spawned enemy missing Enemy script!");
+        }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (pathPoints == null || pathPoints.Length == 0)
+            return;
+
+        Gizmos.color = Color.red;
+        for (int i = 0; i < pathPoints.Length - 1; i++)
+        {
+            if (pathPoints[i] != null && pathPoints[i + 1] != null)
+            {
+                Gizmos.DrawLine(pathPoints[i].position, pathPoints[i + 1].position);
+            }
+        }
+    }
+
 }
