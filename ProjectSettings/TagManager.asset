@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Base
+  - Platform
+  - GameField
+  - BaseHealthBar
   layers:
   - Default
   - TransparentFX

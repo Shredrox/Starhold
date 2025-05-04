@@ -6,10 +6,11 @@ public class Base : MonoBehaviour
     public float maxHealth = 100f;
     private float currentHealth;
 
-    public Slider healthBar; // <-- NEW
+    private Slider healthBar;
 
     private void Start()
     {
+        healthBar = GameObject.Find("BaseHealthBar").GetComponent<Slider>();
         currentHealth = maxHealth;
         if (healthBar != null)
             healthBar.maxValue = maxHealth;

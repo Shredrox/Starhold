@@ -7,15 +7,15 @@ public class Enemy : MonoBehaviour
     public float currentHealth;
 
     public float speed = 2f;
-    public Transform[] pathPoints; // Set by GameManager
+    public Transform[] pathPoints;
     private int currentPointIndex = 0;
 
-    private Base theBase; // reference to the base
+    private Base theBase;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        theBase = Object.FindFirstObjectByType<Base>(); // find the Base script in scene
+        theBase = Object.FindFirstObjectByType<Base>();
     }
 
     private void Update()
@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
         {
             Transform targetPoint = pathPoints[currentPointIndex];
             Vector3 dir = targetPoint.position - transform.position;
-            transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
+            transform.Translate(speed * Time.deltaTime * dir.normalized, Space.World);
 
             if (Vector3.Distance(transform.position, targetPoint.position) < 0.2f)
             {
