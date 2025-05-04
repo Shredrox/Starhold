@@ -713,6 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameFieldPrefab: {fileID: 2292618358569770916, guid: 42750bcff4e33c347914c4f56ce45bd0, type: 3}
+  planeManager: {fileID: 1176679847}
   raycastManager: {fileID: 1176679846}
   platformPositions:
   - {fileID: 0}
@@ -1615,11 +1616,11 @@ SceneRoots:
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
+  - {fileID: 1666184643}
+  - {fileID: 83158814}
   - {fileID: 1176679845}
   - {fileID: 1516590306}
   - {fileID: 497390897}
   - {fileID: 1763130670}
-  - {fileID: 1666184643}
   - {fileID: 715216580}
-  - {fileID: 83158814}
   - {fileID: 1957661049}

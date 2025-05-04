@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
 public class ARPlacement : MonoBehaviour
 {
-    //public GameObject terrainPrefab;
-    //public GameObject towerPrefab;
-    //public GameObject platformPrefab;
     public GameObject gameFieldPrefab;
-
+    public ARPlaneManager planeManager;
     private static GameObject spawnedField;
     public static GameObject SpawnedField => spawnedField;
     public static bool IsFieldPlaced { get; set; }
@@ -21,11 +17,6 @@ public class ARPlacement : MonoBehaviour
     void Start()
     {
         raycastManager = Object.FindFirstObjectByType<ARRaycastManager>();
-
-        //foreach (var pos in platformPositions)
-        //{
-        //    Instantiate(platformPrefab, pos.position, pos.rotation);
-        //}
     }
 
     void Update()
@@ -41,17 +32,6 @@ public class ARPlacement : MonoBehaviour
                 PlaceGameField(hit.point, Quaternion.identity);
             }
         }
-
-        //foreach (var platformPosition in platformPositions)
-        //{
-        //    if (Vector3.Distance(hitPose.position, platformPosition.position) < 0.1f)
-        //    {
-        //        if (towerPrefab != null)
-        //        {
-        //            Instantiate(towerPrefab, hitPose.position, Quaternion.identity);
-        //        }
-        //    }
-        //}
 #else
         if (Input.touchCount == 0)
         {
@@ -70,5 +50,12 @@ public class ARPlacement : MonoBehaviour
     {
         spawnedField = Instantiate(gameFieldPrefab, position, rotation);
         IsFieldPlaced = true;
+        foreach (var plane in planeManager.trackables)
+        {
+            if (plane.TryGetComponent<ARPlaneMeshVisualizer>(out var visualizer))
+            {
+                visualizer.enabled = false;
+            }
+        }
     }
 }

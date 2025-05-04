@@ -23,10 +23,13 @@ public class TowerPlacer : MonoBehaviour
 #endif
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (hit.collider.CompareTag("Platform") && hit.collider.transform.childCount == 0)
+                if (hit.collider.CompareTag("Platform"))
                 {
-                    // Place tower centered on platform
-                    Instantiate(towerPrefab, hit.collider.transform.position, Quaternion.identity, hit.collider.transform);
+                    Vector3 placementPosition = hit.point + Vector3.up * 0.005f;
+
+                    GameObject tower = Instantiate(towerPrefab, placementPosition, Quaternion.identity);
+
+                    tower.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
                 }
             }
         }

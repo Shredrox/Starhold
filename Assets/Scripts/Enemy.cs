@@ -6,7 +6,8 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public float currentHealth;
 
-    public float speed = 2f;
+    private readonly float speed = 0.1f;
+    [HideInInspector]
     public Transform[] pathPoints;
     private int currentPointIndex = 0;
 
@@ -28,10 +29,25 @@ public class Enemy : MonoBehaviour
         if (currentPointIndex < pathPoints.Length)
         {
             Transform targetPoint = pathPoints[currentPointIndex];
-            Vector3 dir = targetPoint.position - transform.position;
-            transform.Translate(speed * Time.deltaTime * dir.normalized, Space.World);
+            float distance = Vector3.Distance(transform.position, targetPoint.position);
 
-            if (Vector3.Distance(transform.position, targetPoint.position) < 0.2f)
+            float step = speed * Time.deltaTime;
+
+            if (step > distance)
+            {
+                step = distance;
+            }
+
+            Vector3 direction = (targetPoint.position - transform.position).normalized;
+            if (direction != Vector3.zero)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+            }
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, step);
+
+            if (Vector3.Distance(transform.position, targetPoint.position) < 0.0001f)
             {
                 currentPointIndex++;
                 if (currentPointIndex >= pathPoints.Length)
@@ -61,8 +77,8 @@ public class Enemy : MonoBehaviour
     {
         if (theBase != null)
         {
-            theBase.TakeDamage(10f); // damage the base
+            theBase.TakeDamage(10f);
         }
-        Destroy(gameObject); // destroy self
+        Destroy(gameObject);
     }
 }

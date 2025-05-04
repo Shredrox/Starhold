@@ -11,7 +11,6 @@ public class EnemyHealthBar : MonoBehaviour
         if (enemy == null) return;
 
         float fillAmount = enemy.currentHealth / enemy.maxHealth;
-        Debug.Log("Health Fill Amount: " + fillAmount);
         healthFill.fillAmount = fillAmount;
 
         transform.rotation = Camera.main.transform.rotation;

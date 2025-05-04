@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitUntil(() => ARPlacement.IsFieldPlaced);
 
-        //GameObject field = GameObject.FindWithTag("GameField");
         var field = ARPlacement.SpawnedField;
 
         if (field == null)
@@ -39,7 +38,6 @@ public class GameManager : MonoBehaviour
         }
         enemySpawnPoint = spawnPoint;
 
-        // Get path points
         Transform pathGroup = field.transform.Find("PathGroup");
         if (pathGroup == null)
         {
@@ -47,21 +45,16 @@ public class GameManager : MonoBehaviour
             yield break;
         }
 
-        //int count = pathGroup.childCount;
-        //pathPoints = new Transform[count];
-        //for (int i = 0; i < count; i++)
-        //{
-        //    pathPoints[i] = pathGroup.GetChild(i);
-        //}
-
-        List<Transform> points = new();
+        List<Transform> points = new()
+        {
+            spawnPoint
+        };
         foreach (Transform child in pathGroup)
         {
             points.Add(child);
         }
         pathPoints = points.ToArray();
 
-        // Start the wave loop
         StartCoroutine(SpawnWaves());
     }
 
@@ -76,24 +69,9 @@ public class GameManager : MonoBehaviour
                 SpawnEnemy();
                 yield return new WaitForSeconds(timeBetweenSpawns);
             }
-            yield return new WaitForSeconds(5f); // Time between waves
+            yield return new WaitForSeconds(5f);
         }
     }
-
-    //void SpawnEnemy()
-    //{
-    //    GameObject enemyObj = Instantiate(enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
-    //    Enemy enemy = enemyObj.GetComponent<Enemy>();
-
-    //    if (enemy != null)
-    //    {
-    //        enemy.pathPoints = pathPoints;
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("Spawned enemy missing Enemy script!");
-    //    }
-    //}
 
     void SpawnEnemy()
     {
@@ -122,12 +100,17 @@ public class GameManager : MonoBehaviour
             return;
 
         Gizmos.color = Color.red;
+
         for (int i = 0; i < pathPoints.Length - 1; i++)
         {
             if (pathPoints[i] != null && pathPoints[i + 1] != null)
             {
+                Gizmos.DrawSphere(pathPoints[i].position, 0.1f);
                 Gizmos.DrawLine(pathPoints[i].position, pathPoints[i + 1].position);
             }
         }
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(pathPoints[^1].position, 0.2f);
     }
 }

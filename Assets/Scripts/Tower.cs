@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
@@ -17,6 +15,8 @@ public class Tower : MonoBehaviour
 
         if (target != null)
         {
+            RotateTowardsTarget();
+
             if (fireCountdown <= 0f)
             {
                 Fire();
@@ -45,6 +45,17 @@ public class Tower : MonoBehaviour
         }
 
         target = closestEnemy;
+    }
+
+    void RotateTowardsTarget()
+    {
+        if (target == null) return;
+
+        Vector3 direction = target.position - transform.position;
+
+        Quaternion rotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
     }
 
     void Fire()

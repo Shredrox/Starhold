@@ -4,7 +4,7 @@ public class Bullet : MonoBehaviour
 {
     private Transform target;
     public float speed = 10f;
-    public float damage = 50f; // How much damage the bullet deals
+    public float damage = 50f;
 
     public void SetTarget(Transform _target)
     {
@@ -42,6 +42,6 @@ public class Bullet : MonoBehaviour
             }
         }
 
-        Destroy(gameObject); // Destroy the bullet after hitting
+        Destroy(gameObject);
     }
 }
