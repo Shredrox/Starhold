@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
 
     private Base theBase;
 
+    public event System.Action OnDeath;
+
     private void Start()
     {
         currentHealth = maxHealth;
@@ -61,7 +63,6 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        Debug.Log("Base Health: " + currentHealth);
         if (currentHealth <= 0)
         {
             Die();
@@ -70,6 +71,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 

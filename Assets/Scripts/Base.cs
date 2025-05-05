@@ -13,16 +13,21 @@ public class Base : MonoBehaviour
         healthBar = GameObject.Find("BaseHealthBar").GetComponent<Slider>();
         currentHealth = maxHealth;
         if (healthBar != null)
-            healthBar.maxValue = maxHealth;
+        { 
+            healthBar.maxValue = maxHealth; 
+        }
+        GameUI.instance.UpdateBaseHealthText(currentHealth, maxHealth);
     }
 
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        Debug.Log("Base Health: " + currentHealth);
+        GameUI.instance.UpdateBaseHealthText(currentHealth, maxHealth);
 
         if (healthBar != null)
-            healthBar.value = currentHealth;
+        { 
+            healthBar.value = currentHealth; 
+        }
 
         if (currentHealth <= 0)
         {
@@ -32,7 +37,6 @@ public class Base : MonoBehaviour
 
     private void LoseGame()
     {
-        Debug.Log("Game Over! Base Destroyed.");
-        GameOverUI.instance.ShowGameOver();
+        GameUI.instance.ShowGameOver();
     }
 }

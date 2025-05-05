@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private Transform[] pathPoints;
     private Transform enemySpawnPoint;
     private int currentWave = 0;
+    private int enemiesAlive = 0;
 
     private void Start()
     {
@@ -63,14 +64,24 @@ public class GameManager : MonoBehaviour
         while (currentWave < totalWaves)
         {
             currentWave++;
-            Debug.Log("Wave " + currentWave);
+            enemiesAlive = 0;
+            GameUI.instance.UpdateWaveText(totalWaves, currentWave);
+
             for (int i = 0; i < enemiesPerWave; i++)
             {
                 SpawnEnemy();
                 yield return new WaitForSeconds(timeBetweenSpawns);
             }
-            yield return new WaitForSeconds(5f);
+
+            if(currentWave < totalWaves)
+            {
+                yield return new WaitForSeconds(5f);
+            }
         }
+
+        yield return new WaitUntil(() => enemiesAlive <= 0);
+
+        GameUI.instance.ShowWin();
     }
 
     void SpawnEnemy()
@@ -82,16 +93,22 @@ public class GameManager : MonoBehaviour
         }
 
         GameObject enemyObj = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-        Enemy enemy = enemyObj.GetComponent<Enemy>();
-
-        if (enemy != null)
+        
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
+            enemiesAlive++;
             enemy.pathPoints = pathPoints;
+            enemy.OnDeath += OnEnemyKilled;
         }
         else
         {
             Debug.LogWarning("Spawned enemy missing Enemy script!");
         }
+    }
+
+    void OnEnemyKilled()
+    {
+        enemiesAlive = Mathf.Max(0, enemiesAlive - 1);
     }
 
     private void OnDrawGizmos()
