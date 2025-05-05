@@ -16,13 +16,13 @@ public class Base : MonoBehaviour
         { 
             healthBar.maxValue = maxHealth; 
         }
-        GameUI.instance.UpdateBaseHealthText(currentHealth, maxHealth);
+        UIManager.instance.UpdateBaseHealthText(currentHealth, maxHealth);
     }
 
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        GameUI.instance.UpdateBaseHealthText(currentHealth, maxHealth);
+        UIManager.instance.UpdateBaseHealthText(currentHealth, maxHealth);
 
         if (healthBar != null)
         { 
@@ -31,12 +31,7 @@ public class Base : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            LoseGame();
+            GameManager.instance.LoseGame();
         }
-    }
-
-    private void LoseGame()
-    {
-        GameUI.instance.ShowGameOver();
     }
 }

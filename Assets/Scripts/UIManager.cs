@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 
-public class GameUI : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    public static GameUI instance;
+    public static UIManager instance;
 
     public GameObject gameOverText;
 

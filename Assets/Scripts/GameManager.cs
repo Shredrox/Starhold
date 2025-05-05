@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public GameObject enemyPrefab;
     public float timeBetweenSpawns = 2f;
     public int enemiesPerWave = 5;
@@ -13,6 +15,18 @@ public class GameManager : MonoBehaviour
     private Transform enemySpawnPoint;
     private int currentWave = 0;
     private int enemiesAlive = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+        { 
+            instance = this; 
+        }
+        else
+        { 
+            Destroy(gameObject); 
+        }
+    }
 
     private void Start()
     {
@@ -59,13 +73,25 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnWaves());
     }
 
+    public void WinGame()
+    {
+        UIManager.instance.ShowWin();
+        Time.timeScale = 0f;
+    }
+
+    public void LoseGame()
+    {
+        UIManager.instance.ShowGameOver();
+        Time.timeScale = 0f;
+    }
+
     IEnumerator SpawnWaves()
     {
         while (currentWave < totalWaves)
         {
             currentWave++;
             enemiesAlive = 0;
-            GameUI.instance.UpdateWaveText(totalWaves, currentWave);
+            UIManager.instance.UpdateWaveText(totalWaves, currentWave);
 
             for (int i = 0; i < enemiesPerWave; i++)
             {
@@ -81,7 +107,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitUntil(() => enemiesAlive <= 0);
 
-        GameUI.instance.ShowWin();
+        WinGame();
     }
 
     void SpawnEnemy()
@@ -109,25 +135,5 @@ public class GameManager : MonoBehaviour
     void OnEnemyKilled()
     {
         enemiesAlive = Mathf.Max(0, enemiesAlive - 1);
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (pathPoints == null || pathPoints.Length == 0)
-            return;
-
-        Gizmos.color = Color.red;
-
-        for (int i = 0; i < pathPoints.Length - 1; i++)
-        {
-            if (pathPoints[i] != null && pathPoints[i + 1] != null)
-            {
-                Gizmos.DrawSphere(pathPoints[i].position, 0.1f);
-                Gizmos.DrawLine(pathPoints[i].position, pathPoints[i + 1].position);
-            }
-        }
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(pathPoints[^1].position, 0.2f);
     }
 }
